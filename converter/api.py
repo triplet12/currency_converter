@@ -9,6 +9,8 @@ class ApiError(Exception):
 
 
 def parse_rates(data: dict, base: str) -> Rates:         # словарь из JSON → Rates; без сети
+    if data.get('result') == 'error':
+        raise ApiError(f"API вернул ошибку: {data.get('error-type')}")
     last_upd_time = datetime.fromtimestamp(data['time_last_update_unix'])
     next_upd_time = datetime.fromtimestamp(data['time_next_update_unix'])
     return Rates(base, data['rates'], last_upd_time, next_upd_time)
@@ -19,9 +21,4 @@ def fetch_rates(base: str = 'USD') -> Rates:   # запрос к API + parse_rat
     response = requests.get('https://open.er-api.com/v6/latest/' + base, timeout=10)
     if response.status_code != 200:
         raise ConnectionError('ошибка в запросе')
-    
-    data = response.json()
-    if data.get('result') == 'error':
-        raise ApiError(f"API вернул ошибку: {data.get('error-type')}")
-    
-    return parse_rates(data, base)
+    return parse_rates(response.json(), base)
