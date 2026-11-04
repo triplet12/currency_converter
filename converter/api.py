@@ -1,8 +1,6 @@
 import requests
-from dataclasses import asdict
 from datetime import datetime
-from .models import Rates
-from json import dumps, load
+from models import Rates
 from decorators_kit import retry
 
 
@@ -18,9 +16,10 @@ def parse_rates(data: dict, base: str) -> Rates:         # словарь из J
     return Rates(base, data['rates'], last_upd_time, next_upd_time)
 
 
-@retry(times=3, exceptions=(requests.ConnectionError, requests.Timeout, requests.HTTPError))
+@retry(times=3, exceptions=(requests.ConnectionError, requests.Timeout))
 def fetch_rates(base: str = 'USD') -> Rates:   # запрос к API + parse_rates
     response = requests.get('https://open.er-api.com/v6/latest/' + base, timeout=10)
-    if response.status_code != 200:
-        raise ConnectionError('ошибка в запросе')
+    if response.status_code == 429:
+        raise ApiError('слишком частые запросы.')
+    response.raise_for_status()
     return parse_rates(response.json(), base)
