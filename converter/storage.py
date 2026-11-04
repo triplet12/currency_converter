@@ -4,7 +4,7 @@ from contextlib import contextmanager
 from pathlib import Path
 from json import load, dumps
 from dataclasses import asdict
-from .models import ConversionRecord, Rates
+from models import ConversionRecord, Rates
 
 
 @contextmanager
@@ -48,7 +48,7 @@ def load_cached_rates(path: Path) -> Rates | None:
     if os.path.exists(path):
         with open(path, encoding='UTF-8') as f:
             cached_resp = load(f)
-            return cached_resp
+            return Rates(**cached_resp)
     return None
 
 
