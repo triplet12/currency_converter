@@ -11,7 +11,7 @@ def convert(amount: float, from_currency: str, to_currency: str, rates: Rates) -
     try:
         from_curr_ex_rate = 1/rates.exchange_dict[from_currency.upper()]
         to_curr_ex_rate = 1/rates.exchange_dict[to_currency.upper()]
-    except:
+    except KeyError:
         raise UnknownCurrencyError('Валюта не найдена')
     
     result = (from_curr_ex_rate / to_curr_ex_rate)  * amount
