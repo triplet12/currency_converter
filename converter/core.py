@@ -1,4 +1,5 @@
 from models import Rates
+from datetime import datetime
 
 
 class UnknownCurrencyError(Exception):
@@ -14,5 +15,5 @@ def convert(amount: float, from_currency: str, to_currency: str, rates: Rates) -
     except:
         raise ValueError('Валюта не найдена')
     
-    result = to_curr_ex_rate / from_curr_ex_rate
+    result = (to_curr_ex_rate / from_curr_ex_rate)  * amount
     return result
