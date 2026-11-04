@@ -4,7 +4,7 @@ from contextlib import contextmanager
 from pathlib import Path
 from json import load, dumps
 from dataclasses import asdict
-from .models import ConversionRecord
+from .models import ConversionRecord, Rates
 
 
 @contextmanager
@@ -42,3 +42,19 @@ def load_history(path: Path) -> list:
             record['created_at'] = datetime.fromisoformat(record['created_at'])
             result.append(ConversionRecord(**record))
     return result
+
+
+def load_cached_rates(path: Path) -> Rates | None: 
+    if os.path.exists(path):
+        with open(path, encoding='UTF-8') as f:
+            cached_resp = load(f)
+            return cached_resp
+    return None
+
+
+def save_cached_rates(rates: Rates, path: Path) -> None: 
+    with atomic_write(path) as f:
+        data = asdict(rates)
+        data['last_upd_time'] = rates.last_upd_time.isoformat()
+        data['next_upd_time'] = rates.next_upd_time.isoformat()
+        f.write(dumps(data, ensure_ascii=False, indent=4))

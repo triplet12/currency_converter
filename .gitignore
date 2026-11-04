@@ -2,3 +2,4 @@ venv/
 currency_converter.egg-info/
 converter/tempCodeRunnerFile.py
 *.pyc
+rates_cache.json

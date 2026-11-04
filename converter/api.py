@@ -1,6 +1,8 @@
 import requests
-from .models import Rates
+from dataclasses import asdict
 from datetime import datetime
+from .models import Rates
+from json import dumps, load
 from decorators_kit import retry
 
 
