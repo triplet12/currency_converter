@@ -1,6 +1,6 @@
 import requests
 from datetime import datetime
-from models import Rates
+from .models import Rates
 from decorators_kit import retry
 
 
