@@ -21,10 +21,9 @@ def atomic_write(path: Path):
         f.close()
         os.replace(temp_file, path)
 
-@dataclass
+@dataclass(frozen=True)
 class Rates:
     base_currency: str
-    currency_dict: dict
     exchange_dict: dict
     last_upd_time: datetime
     next_upd_time: datetime
