@@ -1,4 +1,4 @@
-from models import Rates
+from .models import Rates
 from datetime import datetime
 
 
@@ -8,12 +8,12 @@ class UnknownCurrencyError(Exception):
 
 def convert(amount: float, from_currency: str, to_currency: str, rates: Rates) -> float:
     if amount <= 0:
-        raise UnknownCurrencyError('Сумма должна быть больше нуля.')
+        raise ValueError('Сумма должна быть больше нуля.')
     try:
-        from_curr_ex_rate = 1/rates.exchange_dict['rates'][from_currency]
-        to_curr_ex_rate = 1/rates.exchange_dict['rates'][to_currency]
+        from_curr_ex_rate = 1/rates.exchange_dict[from_currency]
+        to_curr_ex_rate = 1/rates.exchange_dict[to_currency]
     except:
-        raise ValueError('Валюта не найдена')
+        raise UnknownCurrencyError('Валюта не найдена')
     
-    result = (to_curr_ex_rate / from_curr_ex_rate)  * amount
+    result = (from_curr_ex_rate / to_curr_ex_rate)  * amount
     return result
