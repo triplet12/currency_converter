@@ -9,8 +9,8 @@ def convert(amount: float, from_currency: str, to_currency: str, rates: Rates) -
     if amount <= 0:
         raise ValueError('Сумма должна быть больше нуля.')
     try:
-        from_curr_ex_rate = 1/rates.exchange_dict[from_currency]
-        to_curr_ex_rate = 1/rates.exchange_dict[to_currency]
+        from_curr_ex_rate = 1/rates.exchange_dict[from_currency.upper()]
+        to_curr_ex_rate = 1/rates.exchange_dict[to_currency.upper()]
     except:
         raise UnknownCurrencyError('Валюта не найдена')
     
