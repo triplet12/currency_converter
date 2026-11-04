@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "currency-converter"
+version = "0.1.0"
+description = "Консольный конвертер валют по актуальным курсам"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "requests",
+    "decorators-kit @ git+https://github.com/triplet12/decorators_kit",
+]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[tool.setuptools]
+packages = ["converter"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
