@@ -1,4 +1,4 @@
-from models import Rates
+from .models import Rates
 
 
 class UnknownCurrencyError(Exception):
