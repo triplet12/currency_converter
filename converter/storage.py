@@ -33,7 +33,7 @@ def save_history(records: list, path: Path) -> None:
 
 
 def load_history(path: Path) -> list:
-    if not os.path.exists:
+    if not os.path.exists():
         return []
     with path.open(encoding='UTF-8') as f:
         result = []

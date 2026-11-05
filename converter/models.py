@@ -12,7 +12,7 @@ class Rates:
 
 
     def is_expired(self, now: datetime) -> bool: 
-        if self.next_upd_time < now:
+        if self.next_upd_time <= now:
             return True
         return False
 
