@@ -11,6 +11,12 @@ class Rates:
     next_upd_time: datetime
 
 
+    def is_expired(self, now: datetime) -> bool: 
+        if self.next_upd_time < now:
+            return True
+        return False
+
+
 @dataclass
 class ConversionRecord:
     amount: float
