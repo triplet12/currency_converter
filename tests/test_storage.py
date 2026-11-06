@@ -12,7 +12,6 @@ def test_load_history_no_file(tmp_path: Path):
 def test_load_history_empty_file(tmp_path: Path):
     path = tmp_path / 'history.json'
     path.write_text('', encoding='utf-8')  
-    print(load_history(path))
     assert load_history(path) == []
 
 
