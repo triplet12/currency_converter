@@ -5,7 +5,7 @@ from datetime import datetime
 from .models import Rates
 from .api import fetch_rates, ApiError
 from .storage import load_cached_rates, save_cached_rates
-from .core import convert
+from .core import convert, UnknownCurrencyError
 
 
 DATA_DIR = Path.home() / '.currency_converter'
@@ -47,13 +47,19 @@ def main(argv: list[str] | None = None) -> int:
     convert_parser.add_argument('from_currency', type=str)
     convert_parser.add_argument('to_currency', type=str)
 
-
     args = parser.parse_args(argv)
     if args.command == 'convert':
-        rate = get_rates(DATA_DIR)
-        result = convert(args.amount, args.from_currency, args.to_currency, rate)
-        format_output = format_conversion(args.amount, args.from_currency, args.to_currency, result,
-                                   convert(1,args.from_currency, args.to_currency, rate), rate)
-        print(format_output)
-
+        try:
+            rate = get_rates(DATA_DIR)
+            result = convert(args.amount, args.from_currency.upper(), args.to_currency.upper(), rate)
+            format_output = format_conversion(args.amount, args.from_currency.upper(), 
+                                            args.to_currency.upper(), result,
+                                    convert(1,args.from_currency.upper(), args.to_currency.upper(), rate), rate)
+            print(format_output)
+        except (UnknownCurrencyError, ValueError, ApiError) as e:
+            print(f'Ошибка: {e}')
+            return 1
+        except requests.RequestException:
+            print('Ошибка: нет связи с сервисом курсов')
+            return 1
     return 0
