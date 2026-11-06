@@ -28,6 +28,14 @@ def get_rates(data_dir: Path) -> Rates:
     save_cached_rates(fresh, path)
     return fresh    
 
+def format_conversion(amount: float, from_currency: str, to_currency: str,
+                      result: float, rate: float, rates: Rates) -> str: 
+    date_update = rates.last_upd_time.strftime('%Y-%m-%d')
+    return (
+        f'{amount:.2f} {from_currency} = {result:.2f} {to_currency}\n'
+        f'Курс: 1 {from_currency} = {rate} {to_currency}, обновлён {date_update}'
+    )
+
 
 def main(argv: list[str] | None = None) -> int:
     DATA_DIR.mkdir(parents=True, exist_ok=True)
@@ -43,4 +51,8 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     if args.command == 'convert':
         rate = get_rates(DATA_DIR)
-        print(convert(args.amount, args.from_currency, args.to_currency, rate))
+        result = convert(args.amount, args.from_currency, args.to_currency, rate)
+        format_output = format_conversion(args.amount, args.from_currency, args.to_currency, result,
+                                   rate.exchange_dict[args.to_currency], rate)
+        print(format_output)
+
