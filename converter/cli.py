@@ -61,7 +61,7 @@ def main(argv: list[str] | None = None) -> int:
     convert_parser.add_argument('to_currency', type=str)
 
     history_parser.add_argument('--last', type=int, default=10)
-    history_parser.add_argument('--clear')
+    history_parser.add_argument('--clear', action='store_true')
 
     args = parser.parse_args(argv)
 
@@ -86,10 +86,21 @@ def main(argv: list[str] | None = None) -> int:
         except requests.RequestException:
             print('Ошибка: нет связи с сервисом курсов')
             return 1
+        return 0   
 
     if args.command == 'history':
+        if args.clear:
+            save_history([], HISTORY_FILE)
+            print('История очищена.')
+            return 0
+
         records = load_history(HISTORY_FILE)
-        for record in records:
+        if not records:
+            print('Истории нет.')
+        for index, record in enumerate(records):
+            if index == args.last:
+                break
             print(history_format_conversion(record))
+        return 0
         
     return 0
