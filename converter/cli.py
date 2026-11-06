@@ -39,7 +39,7 @@ def format_conversion(amount: float, from_currency: str, to_currency: str,
 
 def main(argv: list[str] | None = None) -> int:
     DATA_DIR.mkdir(parents=True, exist_ok=True)
-    parser = argparse.ArgumentParser(prog='conveter')
+    parser = argparse.ArgumentParser(prog='convertor')
     subparsers = parser.add_subparsers(dest='command', required=True)
     convert_parser = subparsers.add_parser('convert', help='конвертировать валюту')
 
@@ -51,10 +51,12 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == 'convert':
         try:
             rate = get_rates(DATA_DIR)
-            result = convert(args.amount, args.from_currency.upper(), args.to_currency.upper(), rate)
-            format_output = format_conversion(args.amount, args.from_currency.upper(), 
-                                            args.to_currency.upper(), result,
-                                    convert(1,args.from_currency.upper(), args.to_currency.upper(), rate), rate)
+            from_currency = args.from_currency.upper()
+            to_currency = args.to_currency.upper()
+
+            result = convert(args.amount, from_currency, to_currency, rate)
+            format_output = format_conversion(args.amount, from_currency, to_currency, result,
+                                    convert(1,from_currency, to_currency, rate), rate)
             print(format_output)
         except (UnknownCurrencyError, ValueError, ApiError) as e:
             print(f'Ошибка: {e}')
