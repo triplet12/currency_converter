@@ -62,3 +62,10 @@ def save_cached_rates(rates: Rates, path: Path) -> None:
         data['last_upd_time'] = rates.last_upd_time.isoformat()
         data['next_upd_time'] = rates.next_upd_time.isoformat()
         f.write(dumps(data, ensure_ascii=False, indent=4))
+
+
+
+def append_history(record: ConversionRecord, path):
+    history = load_history(path)
+    history.append(record)
+    save_history(history, path)
