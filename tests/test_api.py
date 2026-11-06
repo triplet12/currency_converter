@@ -7,7 +7,7 @@ from pathlib import Path
 
 
 def test_normal():
-    with open(Path('tests/data/usd.json')) as f:
+    with open(Path('data/usd.json')) as f:
         test_dict = load(f)
     lst_time = datetime.fromtimestamp(test_dict['time_last_update_unix'])
     nxt_time = datetime.fromtimestamp(test_dict['time_next_update_unix'])
