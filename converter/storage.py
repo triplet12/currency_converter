@@ -33,10 +33,12 @@ def save_history(records: list, path: Path) -> None:
 
 
 def load_history(path: Path) -> list:
-    if not os.path.exists():
+    if not os.path.exists(path):
         return []
     with path.open(encoding='UTF-8') as f:
         result = []
+        if os.path.getsize(path) == 0:
+            return result
         records = load(f)
         for record in records:
             record['created_at'] = datetime.fromisoformat(record['created_at'])
