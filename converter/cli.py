@@ -33,7 +33,7 @@ def format_conversion(amount: float, from_currency: str, to_currency: str,
     date_update = rates.last_upd_time.strftime('%Y-%m-%d')
     return (
         f'{amount:.2f} {from_currency} = {result:.2f} {to_currency}\n'
-        f'Курс: 1 {from_currency} = {rate} {to_currency}, обновлён {date_update}'
+        f'Курс: 1 {from_currency} = {rate:.4f} {to_currency}, обновлён {date_update}'
     )
 
 
@@ -53,6 +53,7 @@ def main(argv: list[str] | None = None) -> int:
         rate = get_rates(DATA_DIR)
         result = convert(args.amount, args.from_currency, args.to_currency, rate)
         format_output = format_conversion(args.amount, args.from_currency, args.to_currency, result,
-                                   rate.exchange_dict[args.to_currency], rate)
+                                   convert(1,args.from_currency, args.to_currency, rate), rate)
         print(format_output)
 
+    return 0
