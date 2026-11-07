@@ -89,7 +89,14 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     if args.command == 'rates':
-        rates = get_rates(DATA_DIR)
+        try:
+            rates = get_rates(DATA_DIR)
+        except (ApiError, UnknownCurrencyError) as e:
+            print(f'Ошибка: {e}')
+            return 1
+        except requests.RequestException:
+            print('Ошибка: нет связи с сервисом курсов')
+            return 1
         if args.only:
             currencies = sorted(args.only)
         else:    
