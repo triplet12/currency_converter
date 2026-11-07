@@ -8,7 +8,7 @@ from .storage import load_history, save_history, append_history
 from .storage import load_cached_rates, save_cached_rates
 from .core import convert, UnknownCurrencyError
 from .formatting import format_conversion, history_format_conversion
-
+from .formatting import rates_format_conversion
 
 DATA_DIR = Path.home() / '.currency_converter'
 HISTORY_FILE = DATA_DIR / 'history.json'
@@ -39,6 +39,7 @@ def main(argv: list[str] | None = None) -> int:
 
     convert_parser = subparsers.add_parser('convert', help='конвертировать валюту')
     history_parser = subparsers.add_parser('history', help='Показать историю')
+    rates_parser = subparsers.add_parser('rates', help='Показать историю')
 
     convert_parser.add_argument('amount', type=float)
     convert_parser.add_argument('from_currency', type=str)
@@ -46,6 +47,9 @@ def main(argv: list[str] | None = None) -> int:
 
     history_parser.add_argument('--last', type=int, default=10)
     history_parser.add_argument('--clear', action='store_true')
+
+    rates_parser.add_argument('base')
+    rates_parser.add_argument('--only', nargs='+')
 
     args = parser.parse_args(argv)
 
@@ -61,7 +65,6 @@ def main(argv: list[str] | None = None) -> int:
             format_output = format_conversion(args.amount, from_currency, to_currency,
                                                result, rate, rates)
             append_history(record, HISTORY_FILE)
-            print(HISTORY_FILE)
             
             print(format_output)
         except (UnknownCurrencyError, ValueError, ApiError) as e:
@@ -84,5 +87,18 @@ def main(argv: list[str] | None = None) -> int:
         for record in records[-1:-1*args.last-1:-1]:
             print(history_format_conversion(record))
         return 0
+
+    if args.command == 'rates':
+        rates = get_rates(DATA_DIR)
+        if args.only:
+            currencies = args.only
+        else:    
+            currencies = rates.exchange_dict.keys()
+        print(f'Курсы для 1 {args.base} (обновлены {rates.last_upd_time.strftime("%Y-%m-%d")}):')
+
+        for currency in currencies:
+            print(rates_format_conversion(args.base, currency, rates))
+        return 0
         
     return 0
+
