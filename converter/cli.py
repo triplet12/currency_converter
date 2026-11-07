@@ -97,8 +97,11 @@ def main(argv: list[str] | None = None) -> int:
         print(f'Курсы для 1 {args.base} (обновлены {rates.last_upd_time.strftime("%Y-%m-%d")}):')
 
         for currency in currencies:
-            rate = convert(1, args.base, currency, rates)
-            print(rates_format_conversion(args.base, currency, rate))
+            try:
+                rate = convert(1, args.base, currency, rates)
+                print(rates_format_conversion(args.base, currency, rate))
+            except UnknownCurrencyError:
+                print(f'Ошибка: валюта {currency.upper()} не найдена')
         return 0
         
     return 0
