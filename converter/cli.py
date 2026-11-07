@@ -34,7 +34,7 @@ def get_rates(data_dir: Path) -> Rates:
 
 def main(argv: list[str] | None = None) -> int:
     DATA_DIR.mkdir(parents=True, exist_ok=True)
-    parser = argparse.ArgumentParser(prog='convertor')
+    parser = argparse.ArgumentParser(prog='converter')
     subparsers = parser.add_subparsers(dest='command', required=True)
 
     convert_parser = subparsers.add_parser('convert', help='конвертировать валюту')
@@ -91,13 +91,14 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == 'rates':
         rates = get_rates(DATA_DIR)
         if args.only:
-            currencies = args.only
+            currencies = sorted(args.only)
         else:    
-            currencies = rates.exchange_dict.keys()
+            currencies = sorted(rates.exchange_dict.keys())
         print(f'Курсы для 1 {args.base} (обновлены {rates.last_upd_time.strftime("%Y-%m-%d")}):')
 
         for currency in currencies:
-            print(rates_format_conversion(args.base, currency, rates))
+            rate = convert(1, args.base, currency, rates)
+            print(rates_format_conversion(args.base, currency, rate))
         return 0
         
     return 0

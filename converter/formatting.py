@@ -19,5 +19,5 @@ def history_format_conversion(record: ConversionRecord) -> str:
         f'  →  {record.result:.2f} {record.to_currency}'
     )
 
-def rates_format_conversion(base: str, currency: str, rates: Rates) -> str:
-    return f'{base.upper()}     {convert(1, base, currency, rates):.4f} {currency.upper()}'
+def rates_format_conversion(base: str, currency: str, rate: float) -> str:
+    return f'{currency.upper():<5}{rate:>12.4f}'
