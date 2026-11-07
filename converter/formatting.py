@@ -1,4 +1,5 @@
 from .models import Rates, ConversionRecord
+from .core import convert
 
 
 def format_conversion(amount: float, from_currency: str, to_currency: str,
@@ -17,3 +18,6 @@ def history_format_conversion(record: ConversionRecord) -> str:
         f'{date}    {record.amount:.2f} {record.from_currency}'
         f'  →  {record.result:.2f} {record.to_currency}'
     )
+
+def rates_format_conversion(base: str, currency: str, rates: Rates) -> str:
+    return f'{base.upper()}     {convert(1, base, currency, rates):.4f} {currency.upper()}'
