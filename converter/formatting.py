@@ -1,5 +1,4 @@
 from .models import Rates, ConversionRecord
-from .core import convert
 
 
 def format_conversion(amount: float, from_currency: str, to_currency: str,
