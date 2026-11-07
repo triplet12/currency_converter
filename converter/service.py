@@ -7,6 +7,8 @@ from .storage import load_cached_rates, save_cached_rates
 
 
 def get_rates(data_dir: Path) -> Rates:
+    '''Обновление курсов если необходимо'''
+
     path = Path(data_dir / 'rates_cache.json')
     cached = load_cached_rates(path)
 

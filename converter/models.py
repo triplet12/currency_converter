@@ -5,6 +5,9 @@ from datetime import datetime
 
 @dataclass(frozen=True)
 class Rates:
+    '''Датакласс хранящий: выбранную валюту, словарь конвертаций,
+    время последнего обновления и время следующего обновления словаря'''
+
     base_currency: str
     exchange_dict: dict
     last_upd_time: datetime
@@ -19,6 +22,8 @@ class Rates:
 
 @dataclass
 class ConversionRecord:
+    '''Датакласс хранящий информацию о результате перевода валют'''
+
     amount: float
     from_currency: str
     to_currency: str

@@ -2,10 +2,14 @@ from .models import Rates
 
 
 class UnknownCurrencyError(Exception):
+    '''Ошибка неизвестная валюта'''
+    
     def __init__(self, message: str):
         super().__init__(message)
 
 def convert(amount: float, from_currency: str, to_currency: str, rates: Rates) -> float:
+    '''Перевод кол-ва amount валюты from_currency в валюту to_currency'''
+
     if amount <= 0:
         raise ValueError('Сумма должна быть больше нуля.')
     try:

@@ -5,6 +5,8 @@ from decorators_kit import retry
 
 
 class ApiError(Exception):
+    '''Ошибка API'''
+    
     pass
 
 

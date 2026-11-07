@@ -3,6 +3,8 @@ from .models import Rates, ConversionRecord
 
 def format_conversion(amount: float, from_currency: str, to_currency: str,
                       result: float, rate: float, rates: Rates) -> str: 
+    '''Форматирование вывода для команды convert'''
+
     date_update = rates.last_upd_time.strftime('%Y-%m-%d')
     return (
         f'{amount:.2f} {from_currency} = {result:.2f} {to_currency}\n'
@@ -11,6 +13,7 @@ def format_conversion(amount: float, from_currency: str, to_currency: str,
 
 
 def history_format_conversion(record: ConversionRecord) -> str: 
+    '''Форматирование вывода для команды history'''
 
     date = record.created_at.strftime('%Y-%m-%d %H:%M')
     return (
@@ -19,4 +22,6 @@ def history_format_conversion(record: ConversionRecord) -> str:
     )
 
 def rates_format_conversion(base: str, currency: str, rate: float) -> str:
+    '''Форматирование вывода для команды rates'''
+
     return f'{currency.upper():<5}{rate:>12.4f}'
