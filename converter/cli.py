@@ -1,6 +1,5 @@
 import requests
 import argparse
-import os
 from pathlib import Path
 from datetime import datetime
 from .models import Rates, ConversionRecord
@@ -8,6 +7,7 @@ from .api import fetch_rates, ApiError
 from .storage import load_history, save_history, append_history
 from .storage import load_cached_rates, save_cached_rates
 from .core import convert, UnknownCurrencyError
+from .formatting import format_conversion, history_format_conversion
 
 
 DATA_DIR = Path.home() / '.currency_converter'
@@ -31,22 +31,6 @@ def get_rates(data_dir: Path) -> Rates:
     save_cached_rates(fresh, path)
     return fresh    
 
-
-def format_conversion(amount: float, from_currency: str, to_currency: str,
-                      result: float, rate: float, rates: Rates) -> str: 
-    date_update = rates.last_upd_time.strftime('%Y-%m-%d')
-    return (
-        f'{amount:.2f} {from_currency} = {result:.2f} {to_currency}\n'
-        f'Курс: 1 {from_currency} = {rate:.4f} {to_currency}, обновлён {date_update}'
-    )
-
-def history_format_conversion(record: ConversionRecord) -> str: 
-
-    date = record.created_at.strftime('%Y-%m-%d %H:%M')
-    return (
-        f'{date}    {record.amount:.2f} {record.from_currency}'
-        f'  →  {record.result:.2f} {record.from_currency}'
-    )
 
 def main(argv: list[str] | None = None) -> int:
     DATA_DIR.mkdir(parents=True, exist_ok=True)
@@ -97,9 +81,7 @@ def main(argv: list[str] | None = None) -> int:
         records = load_history(HISTORY_FILE)
         if not records:
             print('Истории нет.')
-        for index, record in enumerate(records):
-            if index == args.last:
-                break
+        for record in records[-1:-1*args.last-1:-1]:
             print(history_format_conversion(record))
         return 0
         
